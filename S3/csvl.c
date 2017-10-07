@@ -99,7 +99,7 @@ void affiche_tab_mots(char **ptab_mots)
 }
 
 char **reduit_tab_mots(char **ptab_mots)
-{ 
+{   /*
 	int i=0, j=0, k, nb=compte_mots(ptab_mots);//i indice de ptab, j indice de t, k parcourt t
 	//_Bool same = 0;
 	  char* t[nb];//tab pseudo-reduit
@@ -137,5 +137,5 @@ char **reduit_tab_mots(char **ptab_mots)
 	return tr;
 	
 
-
+*/
 }
