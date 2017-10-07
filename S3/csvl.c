@@ -17,18 +17,24 @@ int compte_mots_chaine(char *chaine) {
 
 char **decompose_chaine(char *chaine)
 {
-	int n,i = 0, j = 0, k; //k indice de debut de mot
+	int n,i = 0, j = 0, k = 0; //k indice de debut de mot
 	n = compte_mots_chaine(chaine);
-	char **tab = (char**)malloc( n * sizeof(char*));
-	while(chaine[i]!='\0' && j < n){
-		printf("while\n");
-		if(chaine[i]==' ') {
-			printf("if\n");
+	char **tab = (char**)malloc( (n+1) * sizeof(char*));
+	while(j < n+1){
+		//printf("while\n");
+		if(chaine[i]==' ' || chaine[i]=='\0') {
+			//printf("if\n");
+			tab[j] = (char*)malloc(i-k+1); 
+			//printf("malloc\n");
 			strncpy(tab[j], chaine+k, i-k);
+			// printf("strncpy \n");
 			j++;
+			tab[j] = NULL;
+			k=i+1;
+			if(chaine[i]=='\0') break;
 		}
 		//printf("%s\n",tab[j]);
-		k=i;
+		
 		i++;
 	}
 	return tab;
@@ -37,7 +43,23 @@ char **decompose_chaine(char *chaine)
 
 char *compose_chaine(char **ptab_mots)
 {
-  /* a completer */
+	int ia=0, lens=0, cursor = 0;
+	while(ptab_mots[ia]!=NULL){
+		lens+=strlen(ptab_mots[ia]);
+		ia++;
+	}
+	lens+= compte_mots(ptab_mots);
+	char *s =(char*)malloc( lens   );
+	for(ia=0; ptab_mots[ia]!=NULL ;ia++){
+		strncpy(s+cursor, ptab_mots[ia], strlen(ptab_mots[ia]) );
+		cursor += strlen(ptab_mots[ia]);
+		if(ia < compte_mots(ptab_mots) ) {
+		s[cursor]=' ';
+		cursor++;
+		}
+	}
+	s[cursor]='\0';
+	return s;
 }
 		
 char **detruit_tab_mots(char **ptab_mots)
@@ -66,10 +88,10 @@ int compte_mots(char **ptab_mots)
 }
 
 void affiche_tab_mots(char **ptab_mots)
-{	printf("aff\n");
+{	//printf("aff\n");
 	int nb,i;
 	nb=compte_mots(ptab_mots);
-	printf("%d\n",nb);
+	//printf("%d\n",nb);
 	for ( i=0; i<nb ; i++)
 		{
 		printf("%s\n",ptab_mots[i]);
@@ -77,6 +99,43 @@ void affiche_tab_mots(char **ptab_mots)
 }
 
 char **reduit_tab_mots(char **ptab_mots)
-{
-  /* a completer */
+{ 
+	int i=0, j=0, k, nb=compte_mots(ptab_mots);//i indice de ptab, j indice de t, k parcourt t
+	//_Bool same = 0;
+	  char* t[nb];//tab pseudo-reduit
+	  for(i=0;i<=nb; i++){
+		  t[i]=NULL;
+	  }
+	for(i=0;i<=nb; i++){
+		//t[j]=ptab_mots[i];
+		t[j]=ptab_mots[i];
+
+		for(k=0; k<j; k++){
+			//printf("t[j] %s ;t[k] %s\n", t[j], t[k]);
+			if( strcmp(t[j],t[k]) ){
+				printf("null");
+				t[j]= NULL;
+				break;
+				
+			}
+		}
+		
+		
+		j++;
+		//same = 0;
+	}
+	t[j]=NULL;
+	//copy of array
+
+	int ii=0, nb2=compte_mots(t);
+	char** tr=(char**)malloc( (nb+1) * sizeof(char*) );
+	for(; ii<=nb; ii++){
+		if (t[ii])
+			tr[ii] = t[ii];
+	}
+	affiche_tab_mots(tr);
+	return tr;
+	
+
+
 }
