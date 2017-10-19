@@ -46,6 +46,7 @@ image_t *charger_image_pgm(char *nom_fichier)
 
 //HAUTEUR largeur
 	img= creer_image();
+	img->path= strdup(nom_fichier);
 	if(sscanf(ligne_lue,"%ld %ld\n",&(img->w),&(img->h))!=2){
 		fprintf(stderr,"erreur");
 		detruire_image(img);
@@ -83,6 +84,31 @@ image_t *charger_image_pgm(char *nom_fichier)
 	}
 
 int sauver_image_pgm(char *nom_fichier, image_t *img)
-	{
-	return 1;
-	}
+        {
+        FILE *f;
+        int i,j;
+//Ecrire le fichier 
+        f=fopen(nom_fichier,"w");
+        if(f==NULL){
+                fprintf(stderr,"impossible d'ouvrir !\n");
+                return 0;
+        }
+//Determiner le fromat -----------------------------------------------
+        fprintf(f,"P2\n");
+//Ecrire la longueur et le hauteur -----------------------------------------------
+        fprintf(f,"%ld %ld\n",(img->w),(img->h));
+//Ecrire le niveau de gris -----------------------------------------------
+        fprintf(f,"255\n");
+//Ecrire le buff contenant l'image -----------------------------------------------
+        for(i=0;i<(img->h);i++){
+                for(j=0;j<(img->w);j++){
+                        fprintf(f,"%hhu\n",img->buff[i*(img->w)+j]);
+                }
+        }
+//Fermer le fichier -----------------------------------------------
+        fclose(f);
+
+        return 1;
+        }
+            
+
