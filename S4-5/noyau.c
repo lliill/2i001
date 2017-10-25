@@ -28,10 +28,27 @@ void detruire_noyau(noyau_t *pn){
 
 noyau_t *charger_noyau(char *nom_fichier){
 	FILE* f;
+	noyau_t* n;
+	int d;
+	char ligne_lue[TMP_STR_SIZE];
+	char* cursor;
+	int i = 0;
+
 	if(!( f=fopen(nom_fichier, "r") ))
 		exit(1);
-	int d=getc(f);
+	
+	if ( !fscanf(f, "%d", &d) )
+		exit(1);
+	n = creer_noyau(d);
+
+	while( fgets(ligne_lue, TMP_STR_SIZE, f) ){
+		cursor = ligne_lue;
+		do{
+		n->coeffs[i] = strtol(cursor, &cursor, 0);
+		i++;
+		}while(cursor != ligne_lue );
+	}
 
 	//noyau_t * noyau = creer_noyau();
-	return NULL;
+	return n;
 	}

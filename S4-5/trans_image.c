@@ -96,7 +96,17 @@ image_t *filtrer_median(image_t *src)
 	return NULL;
 	}
 
-image_t *convoluer(image_t *src, noyau_t *pn)
-	{
-	return NULL;
-	}
+image_t *convoluer(image_t *src, noyau_t *pn){
+        image_t* res = copier_image(src);
+        int ligne, colonne;
+
+        //calcul de valeur de normalisation
+        int normalisation=0;
+        for(ligne = 0; ligne < pn->dim; ligne++)
+                for(colonne = 0; colonne < pn->dim; colonne++)	
+                        normalisation += *(pn->coeffs + (ligne*pn->dim) + colonne );
+        if(normalisation==0)
+                normalisation = 1;	
+
+        return NULL;
+}
