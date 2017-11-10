@@ -20,7 +20,24 @@ int main(void) {
 
   srand(time(NULL));
 
-  /* a completer */
-
+	Animal* lproie;
+	Animal *lpreda = NULL; //très important!!
+	int i;
+	int nproie = rand()%NB_PROIES, npreda= rand()%NB_PREDATEURS;
+	for(i=0; i< nproie; i++)
+		ajouter_animal(rand()%SIZE_X, rand()%SIZE_Y, &lproie);
+	for(i = 0; i < npreda; i++)
+		//printf("%d",i);
+		ajouter_animal(rand()%SIZE_X, rand()%SIZE_Y, &lpreda);
+	clear_screen();
+	printf("Nombre des proies: %4d\n", nproie);
+	printf("Nombre des proies compté: %4d\n", compte_animal_rec(lproie));
+	printf("Nombre des predateurs: %4d\n", npreda);
+	printf("Nombre des predateurs compté: %4d\n", compte_animal_rec(lpreda));
+	afficher_ecosys(lproie, lpreda);
+	//free...
+	freeListAnimals(lproie);
+	freeListAnimals(lpreda);
+/**/
   return 0;
 }

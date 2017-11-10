@@ -39,7 +39,7 @@ Animal *ajouter_en_tete_animal(Animal *liste, Animal *animal) {
 	animal-> precedent = NULL;
 	if(liste) 
 		liste->precedent = animal;
-	return liste = animal;
+	return animal;
 }
 
 void ajouter_animal(int x, int y, Animal **liste_animal) {
@@ -104,10 +104,47 @@ void rafraichir_predateurs(Animal **liste_predateur, Animal **liste_proie) {
 }
 
 void afficher_ecosys(Animal *liste_proie,Animal *liste_predateur) {
-  /* a completer */
+	char ecosys[SIZE_X][SIZE_Y]; 
+	int i,j;
+	
+	for(i=0; i < SIZE_X; i++)
+		for(j=0; j < SIZE_Y; j++)
+			ecosys[i][j]=' ';
+
+	while(liste_proie){
+		ecosys[liste_proie->x][liste_proie->y]='*';
+		liste_proie=liste_proie->suivant;
+	}
+	while(liste_predateur){
+		if(ecosys[liste_predateur->x][liste_predateur->y]=='*')
+			ecosys[liste_predateur->x][liste_predateur->y]='@';
+		else if(ecosys[liste_predateur->x][liste_predateur->y]==' ')
+			ecosys[liste_predateur->x][liste_predateur->y]='O';
+		liste_predateur=liste_predateur->suivant;
+	}
+	for(i=0; i < SIZE_X; i++){
+		for(j=0; j < SIZE_Y; j++)
+			//if(ecosys[i][j]=='*' ||ecosys[i][j]=='O' ||ecosys[i][j]=='@')
+				putchar(ecosys[i][j]);
+			//else
+			//	putchar(' ');
+		putchar('\n');
+	}
+				
 
 }
 
 void clear_screen() {
   printf("\x1b[2J\x1b[1;1H");  /* code ANSI X3.4 pour effacer l'ecran */
 }
+
+void freeListAnimals(Animal* l){
+	//if(!l)	return;
+	Animal* tmp;
+	while(l){
+		tmp=l->suivant;
+		free(l);
+		l = tmp;
+	}
+}
+		
