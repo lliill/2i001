@@ -115,7 +115,7 @@ void lowerEnergy(Animal **liste, float d){
 			free(ani);
 			ani = tmp;
 		}
-		ani = ani->suivant;
+		ani = ani->suivant;//il faut un else
 	}
 }
 
