@@ -1,4 +1,4 @@
-
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "ecosys.h"
@@ -53,14 +53,15 @@ void ajouter_animal(int x, int y, Animal **liste_animal) {
 void enlever_animal(Animal **liste, Animal *animal) {
 	if (liste) return;
 	else if (*liste) return;
+	//Animal* i=*liste;
 	else if( *liste == animal){
 		//liste = &( (*liste)-> suivant);//hypothèse nb d'occurrence = 1
 		Animal* sui = (*liste) -> suivant;
 		Animal* pre = (*liste) -> precedent;
 		sui -> precedent = pre;
 		pre -> suivant = sui;
-		free(*liste);
-		*liste = sui;	
+		//free(*liste);
+		*liste = sui;	//...
 	}
 	else
 		return enlever_animal( &((*liste)->suivant), animal);
@@ -82,25 +83,79 @@ unsigned int compte_animal_it(Animal *la) {
 }
 
 void bouger_animaux(Animal *la) {
-  /* a completer */
+	if(!la)	return;
+	la->x=(la->x + la->dir[0])%SIZE_X;
+	la->y=(la->y + la->dir[1])%SIZE_Y;
+	if(rand()/RAND_MAX < p_ch_dir){
+		la->dir[0]=rand()%3-1;
+		la->dir[1]=rand()%3-1;
+	}
+	bouger_animaux(la->suivant);	
 }
 
 void reproduce(Animal **liste_animal) {
-  /* a completer */
+	if(!liste_animal) return;
+	Animal* ani = *liste_animal;
+	while(ani){
+		if(rand()/RAND_MAX < p_reproduce)
+			ajouter_animal(ani->x, ani->y, liste_animal);
+		ani=ani->suivant;
+	}		
 }
 
-void rafraichir_proies(Animal **liste_proie) {
-  /* a completer */
+void lowerEnergy(Animal **liste, float d){
+	//assert(!liste && !*liste);//..
+	Animal* ani= *liste;
+	Animal* tmp = NULL;
+	while(ani){
+		ani->energie -= d;
+		if(ani->energie < 0){
+			enlever_animal(liste, ani);
+			tmp = ani->suivant;
+			free(ani);
+			ani = tmp;
+		}
+		ani = ani->suivant;
+	}
+}
+
+void rafraichir_proies(Animal **liste_proie) {//erreur de segmentation à partir d'une certaine tour
+	if(!liste_proie) return;
+	if(!*liste_proie) return;
+	bouger_animaux(*liste_proie);
+	lowerEnergy(liste_proie, d_proie);
+	reproduce(liste_proie);
 }
 
 Animal *animal_en_XY(Animal *l, int x, int y) {
-  /* a completer */
-  return NULL;
+	if(!l)
+		return NULL;
+	else if(l->x == x && l->y == y)
+		return l;
+	else
+		return animal_en_XY(l->suivant, x, y);
 } 
 
-void rafraichir_predateurs(Animal **liste_predateur, Animal **liste_proie) {
-  /* a completer */
+void eat(Animal *predateur, Animal **liste_proie){
+	if (!predateur || !liste_proie || !*liste_proie) return;
+	Animal* malheureux = animal_en_XY(*liste_proie, predateur->x, predateur->y);
+	if(malheureux){
+		predateur->energie += malheureux->energie;
+		enlever_animal(liste_proie, malheureux);
+		//free(malheureux);
+	}
+	return 	eat(predateur->suivant, liste_proie);
+}
 
+void rafraichir_predateurs(Animal **liste_predateur, Animal **liste_proie) {
+	if(!liste_proie) return;
+	if(!*liste_proie) return;
+	if(!liste_predateur) return;
+	if(!*liste_predateur) return;
+	bouger_animaux(*liste_predateur);
+	eat(*liste_predateur, liste_proie);
+	lowerEnergy(liste_predateur, d_predateur);
+	reproduce(liste_predateur);
 }
 
 void afficher_ecosys(Animal *liste_proie,Animal *liste_predateur) {
