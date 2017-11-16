@@ -5,7 +5,7 @@
 #include <time.h>
 #include <time.h>
 
-#define NB_PROIES 20
+#define NB_PROIES 200000
 #define NB_PREDATEURS 20
 #define T_WAIT 40000
 
@@ -27,29 +27,36 @@ int main(void) {
 	Animal *lpreda = NULL; //très important!!
 	int i;
 	int nproie = rand()%NB_PROIES, npreda= rand()%NB_PREDATEURS;
+
+
 	for(i=0; i< nproie; i++)
 		ajouter_animal(rand()%SIZE_X, rand()%SIZE_Y, &lproie);
 	for(i = 0; i < npreda; i++)
 		//printf("%d",i);
 		ajouter_animal(rand()%SIZE_X, rand()%SIZE_Y, &lpreda);
 	clear_screen();
-	//printf("Nombre des proies: %4d\n", nproie);
-	printf("Nombre des proies compté: %4d\n", compte_animal_rec(lproie));
-	//printf("Nombre des predateurs: %4d\n", npreda);
-	printf("Nombre des predateurs compté: %4d\n", compte_animal_rec(lpreda));
+
+	nproie = compte_animal_rec(lproie);
+	npreda = compte_animal_rec(lpreda);
+	printf("Nombre des proies compté: %4d\n", nproie);
+	printf("Nombre des predateurs compté: %4d\n", npreda);
 	afficher_ecosys(lproie, lpreda);
 
 	i=1;
-	while(1){//erreur de segmentation à partir d'une certaine tour
+
+	
+	while(npreda + nproie){//erreur de segmentation à partir d'une certaine tour
 	
 	rafraichir_proies(&lproie);
 	rafraichir_predateurs(&lpreda, &lproie);
+	nproie = compte_animal_rec(lproie);
+	npreda = compte_animal_rec(lpreda);
 	clear_screen();
 	
-	usleep(T_WAIT+1000000);
+	usleep(T_WAIT);
 	printf("%d eme tour\n", i);
-	printf("Nombre des proies compté: %4d\n", compte_animal_rec(lproie));
-	printf("Nombre des predateurs compté: %4d\n", compte_animal_rec(lpreda));
+	printf("Nombre des proies compté: %4d\n", nproie);
+	printf("Nombre des predateurs compté: %4d\n", npreda);
 	afficher_ecosys(lproie, lpreda);
 	i++;
 	}
