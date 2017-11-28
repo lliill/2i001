@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include "liste.h"
 #include "abr.h"
@@ -28,7 +29,11 @@ Lm_mot *part_Lmot(Lm_mot **pl)
 /* Creation de l ABR, destruction de la liste*/
 Nd_mot *Lm2abr(Lm_mot *l){
 	if (!l)	return NULL;
-	Nd_mot *nd = malloc(sizeof(Nd_mot));
+  Nd_mot *nd = malloc(sizeof(Nd_mot));
+  if(!nd){
+    fprintf(stderr, "Erreur d'allocation de mémoire\n");
+    return NULL;
+  }
 	
 	Lm_mot* pivot = part_Lmot(&l);
 	nd -> mot = pivot -> mot;
@@ -40,18 +45,30 @@ Nd_mot *Lm2abr(Lm_mot *l){
 
 
 /* destruction de l ABR donnee en argument */
-void detruire_abr_mot(Nd_mot *abr)
-{
-
-  /* A completer */
-
+void detruire_abr_mot(Nd_mot *abr){
+  if (abr == NULL)
+    return;
+  else if(abr->g == NULL && abr->d == NULL)
+    free(abr);
+  else {
+    if(abr->g)
+      detruire_abr_mot(abr->g);
+    if(abr->d)
+      detruire_abr_mot(abr->d);
+    free(abr);
+  }
 }
 
 
 /* Recherche d'un mot dans ABR */
-Nd_mot *chercher_Nd_mot(Nd_mot *abr, const char *mot)
-{
-  /* A completer */
-
-  return NULL;
+Nd_mot *chercher_Nd_mot(Nd_mot *abr, const char *mot){
+  if(mot == NULL || abr == NULL)
+    return NULL;
+  int c = strcmp(mot, abr->mot);
+  if (c==0)
+    return abr;
+  else if (c < 0)
+    return  chercher_Nd_mot (abr->g, mot);
+  else
+    return  chercher_Nd_mot (abr->d, mot);
 }
