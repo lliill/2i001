@@ -48,10 +48,10 @@ Nd_mot *Lm2abr(Lm_mot *l){
 void detruire_abr_mot(Nd_mot *abr){
   if (abr == NULL)
     return;
-  \*
+  /*
 	  else if(abr->g == NULL && abr->d == NULL)
     free(abr);
-	*\
+	*/
   else {
     if(abr->g)
       detruire_abr_mot(abr->g);
