@@ -39,7 +39,7 @@ Nd_mot *Lm2abr(Lm_mot *l){
 	nd -> mot = pivot -> mot;
 	nd -> g = Lm2abr(l);
 	nd -> d = Lm2abr(pivot->suiv);
-
+    free(pivot);
   return nd;
 }
 
