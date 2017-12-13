@@ -1,0 +1,11 @@
+Nom: LI
+Prénom: Mengda
+Groupe: 8
+
+Indiquez ici comment créer l'exécutable de la question 2 :
+
+gcc -Wall score.o gameTest.o mainTabScores.o -o mainTabScores
+
+Autres commentaires éventuels:
+
+Je suis jusqu'au exo2 q8(pas terminé)
