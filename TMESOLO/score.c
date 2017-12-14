@@ -22,7 +22,7 @@ Score* creerScore(char* nom, unsigned int pts) {
 		fprintf(stderr, "Erreur d'allocation d'un score\n");
 		return NULL;
 	}
-	p -> nom = nom;
+	p -> nom = strdup(nom);
 	p -> points = pts;
 	return p;
 }
@@ -58,7 +58,9 @@ void detruireListeClassements(Classement* liste) {
 		return;
 	else{
 		detruireScore(liste->score);
-		detruireListeClassements(liste->suivant);
+		Classement* suiv = liste->suivant;
+		free(liste);
+		detruireListeClassements(suiv);
 	}
 }
 
@@ -95,7 +97,7 @@ void insererDansClassement(Classement** classement, Score* score) {
 		return;
 
 	else
-		helper(*classement, score);
+		*classement = helper(*classement, score);
 /*
 	else if(*classement == NULL){
 		*classement = creerClassement(score);
@@ -134,8 +136,10 @@ void ouvrirClassement(char* nom_fichier, Classement** classementPoints) {
 	while(fscanf(f, "%s", s)!=EOF){
 		fscanf(f, " %d", &pts);
 		Score* score = creerScore(s, pts);
-		insererDansClassement(classementPoints, score);
+		*classementPoints = helper(*classementPoints, score);
+		//insererDansClassement(classementPoints, score);
 		
 	}
+	fclose(f);
 	return;
 }
